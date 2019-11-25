@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -39,8 +40,9 @@ public class App
 	protected static float powers[] = new float[50];
 	protected static float coins[] = new float[50];
 	protected static String symbols[] = new String[50];
+	public static Random random;                                     //variable for going random
 	
-	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
+	//protected String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
 	
 	public App() throws IOException{
 		
@@ -93,6 +95,9 @@ public class App
     
 
     public static void main( String[] args ) throws IOException 	{
+    	
+    	random = new Random(5678);
+    	
     	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
     	String mapSource = parseMap(mapString);
         getFeatures(mapSource);

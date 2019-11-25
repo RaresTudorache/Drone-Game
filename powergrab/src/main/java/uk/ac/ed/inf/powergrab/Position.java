@@ -23,8 +23,8 @@ public class Position {
 		int i = allDirections.indexOf(direction);	
 		
 		double degree = 22.5 * i;
-		double newlong = this.longitude + Math.sin(Math.toRadians(degree))*Drone.r;
-		double newlat = this.latitude + Math.cos(Math.toRadians(degree))*Drone.r;
+		double newlong = this.longitude + Math.sin(Math.toRadians(degree))*Drone.radius;
+		double newlat = this.latitude + Math.cos(Math.toRadians(degree))*Drone.radius;
 	
 		Position nextPos = new Position(newlat,newlong);
 		return nextPos;
