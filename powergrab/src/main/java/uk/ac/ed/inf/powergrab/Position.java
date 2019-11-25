@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Position {
+	
 
 	public double latitude;
 
@@ -14,16 +15,16 @@ public class Position {
 		this.longitude = longitude;
 	}
 	
-	public  Position nextPosition(Direction direction) { 
-		double r = 0.0003;
+	public Position nextPosition(Direction direction) { 
+
 		
 		List<Direction> allDirections = Arrays.asList(Direction.values());
 	
 		int i = allDirections.indexOf(direction);	
 		
 		double degree = 22.5 * i;
-		double newlong = this.longitude + Math.sin(Math.toRadians(degree))*r;
-		double newlat = this.latitude + Math.cos(Math.toRadians(degree))*r;
+		double newlong = this.longitude + Math.sin(Math.toRadians(degree))*Drone.r;
+		double newlat = this.latitude + Math.cos(Math.toRadians(degree))*Drone.r;
 	
 		Position nextPos = new Position(newlat,newlong);
 		return nextPos;

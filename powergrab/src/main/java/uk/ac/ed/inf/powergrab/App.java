@@ -26,13 +26,13 @@ import com.google.gson.JsonElement;
 public class App 
 {
 	
-	public static double grab = 0.00025;
-	public static double radius = 0.0003;
+	//public static double grab = 0.00025;
+	//public static double radius = 0.0003;
 	
-	protected static double drone_power = 250.0;
-	protected static int nr_moves = 0;
-	protected static double drone_coins = 0;
-	protected static Position pos = new Position(55.944425, -3.188396);
+	//protected static double drone_power = 250.0;
+	//protected static int nr_moves = 0;
+	//protected static double drone_coins = 0;
+	//protected static Position pos = new Position(55.944425, -3.188396);
 	//protected static int mapLength;
 	protected static double latitudes[] = new double[50];   //geometry[1]
 	protected static double longitudes[] = new double[50];  //geometry[0]
@@ -40,7 +40,13 @@ public class App
 	protected static float coins[] = new float[50];
 	protected static String symbols[] = new String[50];
 	
-    public static void parseMaps(String mapString) throws IOException {
+	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
+	
+	public App() throws IOException{
+		
+	}
+	
+    public static String parseMap(String mapString) throws IOException {
     	
   
     	URL mapUrl = new URL(mapString);
@@ -57,8 +63,15 @@ public class App
     	Reader reader = new InputStreamReader(input);
     	String mapSource = CharStreams.toString(reader);                                          //geojson content from the server
     	
-    	FeatureCollection fc  = FeatureCollection.fromJson(mapSource);            		  //returns a FeatureCollection
-    	List<Feature> F = fc.features();                                                  //f is a list of Feature objects
+    	return mapSource;
+    	
+    }
+
+	
+    public static void getFeatures(String mapSource) throws IOException{
+    	
+       FeatureCollection fc  = FeatureCollection.fromJson(mapSource);            		  //returns a FeatureCollection
+       List<Feature> F = fc.features();                                                  //f is a list of Feature objects
     	
     	for(int i=0;i<F.size();i++) {
     		
@@ -71,16 +84,17 @@ public class App
     		symbols[i] = F.get(i).getProperty("marker-symbol").getAsString();
     	}
     	
-    	//for(int i=0;i<50;i++) {
-    		//System.out.println(coins[i]);
-    //	}
-    	System.out.println(fc);
-    }
-	
-	
+    	
+    	for(int i=0;i<F.size();i++) {
+    		System.out.println(F.get(i));
+    	}
+      
+   }
+    
+
     public static void main( String[] args ) throws IOException 	{
     	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
-    	parseMaps(mapString);
-        
+    	String mapSource = parseMap(mapString);
+        getFeatures(mapSource);
     }
 }
