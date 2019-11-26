@@ -38,5 +38,9 @@ public class Position {
 	  return false;
 	}
 	
+	public String toString()
+	{
+		return "[" + longitude + "," + latitude + "]";
+	}
 
 }

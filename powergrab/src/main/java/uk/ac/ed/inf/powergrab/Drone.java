@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mapbox.geojson.LineString;
+import com.mapbox.geojson.Point;
+
 public class Drone {
 	
 	public static double grabDistance = 0.00025;
@@ -14,10 +17,7 @@ public class Drone {
 	protected static double dronePower = 250.0;
 	protected static int nrMoves = 0;
 	protected static double droneCoins = 0;
-	
-	
-	protected static Position pos = new Position(55.944425, -3.188396);
-	
+
 	
 	protected static void positiveCollect(int k) {                                                     //if the station is positive connect
 		droneCoins += App.coins[k];
@@ -80,28 +80,110 @@ public class Drone {
 		
 	}
 	
-	public static void move(Position pos, Position nextPos) {
-		pos = nextPos;
+	public static void move(Direction d) {
+		App.pos = App.pos.nextPosition(d);
 		nrMoves++;
   		dronePower -=1.25;
 	}
-	
-	public static void moveRandom(Position pos, Position nextPos) {
+		
+	public static void moveRandom(Position simPos) {
 		int random16 = App.random.nextInt(16);
-		pos = pos.nextPosition(Direction.values()[random16]);
-		nrMoves++;
-		dronePower -=1.25;
+		simPos = App.pos.nextPosition(Direction.values()[random16]);
+		if(simPos.inPlayArea()) {
+			App.pos = simPos;
+			nrMoves++;
+			dronePower -= 1.25;
+		}
 	}
 
-	public static void go(Position nextPos) {
-		  int nrFeaturesinRange = 0;
-		  if(nextPos.inPlayArea()) {
+	public static int nrFeaturesinRange(Position nextPos) {
+		int nr = 0;
+		for(int j =0;j<50;j++) {
+			  if(stationInRange(nextPos, j))                                          //if the station is in Range of the next virtual position
+				  nr++;
+			  }
+		return nr;
+	}
+	
+	
+	public static void go(Position nextPos, Direction d) {
+			int nrFeatures = nrFeaturesinRange(nextPos);                             //IMPROVEMENT: change getClosesStation
+			int closest = getClosestStation(nextPos);
+				if(nrFeatures == 1) {
+					if(App.coins[closest] >0 ) {
+						move(d);
+						addToLine(App.pos);
+						Drone.positiveCollect(closest);	
+					}
+					else {
+						moveRandom(App.pos);
+						addToLine(App.pos);
+					}
+				}
+				else if(nrFeatures ==0 ){
+					moveRandom(App.pos);
+					addToLine(App.pos);
+					
+				}
+				else {  //if there is more than on e station in range
+				
+				  	if(App.coins[closest] > 0) {                                                         //if the closest station is positive
+				  		move(d);
+				  		addToLine(App.pos);
+				  		Drone.positiveCollect(closest);
+				  		
+				  	}
+				  	else {
+				  		//move(d);
+				  		moveRandom(App.pos);
+				  		addToLine(App.pos);
+				  		//Drone.negativeCollect(closest);                              //IMPROVEMENT: if negative go random
+				  	}
+				}	
+	}
+			
+	@SuppressWarnings("static-access")
+	public static void addToLine(Position new_point) {
+
+		LineString temp = LineString.fromJson(App.path);
+		ArrayList<Point> list = (ArrayList<Point>) temp.coordinates();
+		Point new_p = Point.fromLngLat(new_point.longitude, new_point.latitude);
+		list.add(new_p);
+		LineString s_line = LineString.fromJson(App.path);
+		App.path = s_line.fromLngLats(list).toJson();
+
+	}
+				
+			/*	  if(App.coins[j] > 0 && nrFeatures == 1) {                                             //if there is just one station in range and is positive then grab
+					  move(pos,nextPos);
+					  Drone.positiveCollect(j);   
+					 
+				  }                       
+				  else if(nrFeatures >= 2) {                                                         //if there is more then one station in the range get the closest 
+					  	int closest = getClosestStation(nextPos);
+					  	if(App.coins[closest] > 0) {                                                         //if the closest station is positive
+					  		move(pos,nextPos);
+					  		Drone.positiveCollect(closest);
+					  	}
+					  	else {
+					  		move(pos,nextPos);
+					  		Drone.negativeCollect(closest);                              //IMPROVEMENT: if negative go random
+					  	}
+				  }
+				  else if(nrFeatures == 1 && App.coins[j]<0){                     //if there is just one station and is negative then go random somewhere else 
+					    moveRandom(pos);
+					    go(pos);
+					    
+				  }
+			}
+		}*/
+		
+	    
+				  
+		/*  if(nextPos.inPlayArea()) {
 			  for(int i =0;i<50;i++) {
-				  if(stationInRange(nextPos, i)) {                                         //if the station is in Range of the next virtual position
-					  //double p = Math.pow((nextPos.latitude - App.latitudes[i]),2) + Math.pow((nextPos.longitude - App.longitudes[i]),2);
-					  //eDistances.add(p);
-					  //indexEdistances.put(p, i);
-					  nrFeaturesinRange++;
+				                                                             //if the station is in Range of the next virtual position
+					 
 					  if(App.coins[i] > 0 && nrFeaturesinRange == 1) {                                            //if there is just one station in range and is positive then grab
 						  move(pos,nextPos);
 						  Drone.positiveCollect(i);   
@@ -119,18 +201,15 @@ public class Drone {
 						  	}
 					  }
 					  else if(nrFeaturesinRange == 1 && App.coins[i]<0){                    //if there is just one station and is negative then go random somewhere else 
-						    moveRandom(pos,nextPos);
+						    moveRandom(pos);
 						    go(pos);
 						    
 					  }
-				  }
+				  
 			  }
-		}
-	}
-	
-	public static void main(String[] args) {
-		//System.out.println(allNextPositions(pos).get(0).latitude);
-	}
+		}*/
+		  
+
 	
 
 }

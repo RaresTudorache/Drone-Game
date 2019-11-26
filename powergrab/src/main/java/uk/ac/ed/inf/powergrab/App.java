@@ -26,6 +26,8 @@ import com.google.gson.JsonElement;
  */
 public class App 
 {
+
+	protected static Position pos = new Position(55.944425, -3.188396);
 	
 	//public static double grab = 0.00025;
 	//public static double radius = 0.0003;
@@ -41,6 +43,7 @@ public class App
 	protected static float coins[] = new float[50];
 	protected static String symbols[] = new String[50];
 	public static Random random;                                     //variable for going random
+	public static String path;   //path of the drone
 	
 	//protected String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
 	
@@ -87,19 +90,31 @@ public class App
     	}
     	
     	
-    	for(int i=0;i<F.size();i++) {
-    		System.out.println(F.get(i));
-    	}
+    //	for(int i=0;i<F.size();i++) {
+    	//	System.out.println(F.get(i));
+    //	}
       
    }
     
+    public static String initializeLineString2() {
+		String init = "{\"TYPE\": \"LineString\",\"coordinates\": [";
+		String end = "],\"properties\": {}}";
+		String pos_str = App.pos.toString();
+		return init + pos_str + end;
+
+	}
 
     public static void main( String[] args ) throws IOException 	{
     	
     	random = new Random(5678);
     	
-    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
+    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/06/06/powergrabmap.geojson";
     	String mapSource = parseMap(mapString);
         getFeatures(mapSource);
+    	Stateless.startGame();
+    	System.out.println(path);
+    	System.out.println(Drone.dronePower);
+    	System.out.println(Drone.droneCoins);
+    	System.out.println(Drone.nrMoves);
     }
 }
