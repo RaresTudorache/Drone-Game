@@ -28,15 +28,7 @@ public class App
 {
 
 	protected static Position pos = new Position(55.944425, -3.188396);
-	
-	//public static double grab = 0.00025;
-	//public static double radius = 0.0003;
-	
-	//protected static double drone_power = 250.0;
-	//protected static int nr_moves = 0;
-	//protected static double drone_coins = 0;
-	//protected static Position pos = new Position(55.944425, -3.188396);
-	//protected static int mapLength;
+
 	protected static double latitudes[] = new double[50];   //geometry[1]
 	protected static double longitudes[] = new double[50];  //geometry[0]
 	protected static float powers[] = new float[50];
@@ -88,12 +80,6 @@ public class App
     		powers[i] = F.get(i).getProperty("power").getAsFloat();
     		symbols[i] = F.get(i).getProperty("marker-symbol").getAsString();
     	}
-    	
-    	
-    //	for(int i=0;i<F.size();i++) {
-    	//	System.out.println(F.get(i));
-    //	}
-      
    }
     
     public static String initializeLineString2() {
@@ -108,7 +94,7 @@ public class App
     	
     	random = new Random(5678);
     	
-    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/06/06/powergrabmap.geojson";
+    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2020/09/23/powergrabmap.geojson";
     	String mapSource = parseMap(mapString);
         getFeatures(mapSource);
     	Stateless.startGame();

@@ -65,7 +65,7 @@ public class Drone {
 	public static int getClosestStation(Position nextPos) {
 		 List<Double> eDistances = new ArrayList<>();
 		 Map<Double, Integer> indexEdistances = new HashMap<>();
-		for (int i = 0; i < 50; i++) {
+		 for (int i = 0; i < 50; i++) {
 			if(Math.pow((nextPos.latitude - App.latitudes[i]),2) + Math.pow((nextPos.longitude - App.longitudes[i]),2) <= Math.pow(grabDistance,2)) {
 				double dist = Math.pow((nextPos.latitude - App.latitudes[i]),2) + Math.pow((nextPos.longitude - App.longitudes[i]),2);
 				eDistances.add(dist);
@@ -104,7 +104,6 @@ public class Drone {
 			  }
 		return nr;
 	}
-	
 	
 	public static void go(Position nextPos, Direction d) {
 			int nrFeatures = nrFeaturesinRange(nextPos);                             //IMPROVEMENT: change getClosesStation

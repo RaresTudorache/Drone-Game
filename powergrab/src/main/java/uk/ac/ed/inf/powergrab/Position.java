@@ -10,6 +10,8 @@ public class Position {
 
 	public double longitude;
 	
+	public static List<Direction> allDirections = Arrays.asList(Direction.values());
+	
 	public Position(double latitude, double longitude) { 
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -17,8 +19,6 @@ public class Position {
 	
 	public Position nextPosition(Direction direction) { 
 
-		
-		List<Direction> allDirections = Arrays.asList(Direction.values());
 	
 		int i = allDirections.indexOf(direction);	
 		
