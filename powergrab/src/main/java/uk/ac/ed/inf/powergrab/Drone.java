@@ -66,7 +66,7 @@ public class Drone {
 		 List<Double> eDistances = new ArrayList<>();
 		 Map<Double, Integer> indexEdistances = new HashMap<>();
 		 for (int i = 0; i < 50; i++) {
-			if(Math.pow((nextPos.latitude - App.latitudes[i]),2) + Math.pow((nextPos.longitude - App.longitudes[i]),2) <= Math.pow(grabDistance,2)) {
+			if(stationInRange(nextPos, i)) {
 				double dist = Math.pow((nextPos.latitude - App.latitudes[i]),2) + Math.pow((nextPos.longitude - App.longitudes[i]),2);
 				eDistances.add(dist);
 				indexEdistances.put(dist, i);
@@ -105,42 +105,80 @@ public class Drone {
 		return nr;
 	}
 	
-	public static void go(Position nextPos, Direction d) {
-			int nrFeatures = nrFeaturesinRange(nextPos);                             //IMPROVEMENT: change getClosesStation
-			int closest = getClosestStation(nextPos);
-				if(nrFeatures == 1) {
-					if(App.coins[closest] >0 ) {
-						move(d);
-						addToLine(App.pos);
-						Drone.positiveCollect(closest);	
-					}
-					else {
-						moveRandom(App.pos);
-						addToLine(App.pos);
-					}
-				}
-				else if(nrFeatures ==0 ){
-					moveRandom(App.pos);
-					addToLine(App.pos);
-					
-				}
-				else {  //if there is more than on e station in range
-				
-				  	if(App.coins[closest] > 0) {                                                         //if the closest station is positive
-				  		move(d);
-				  		addToLine(App.pos);
-				  		Drone.positiveCollect(closest);
-				  		
-				  	}
-				  	else {
-				  		//move(d);
-				  		moveRandom(App.pos);
-				  		addToLine(App.pos);
-				  		//Drone.negativeCollect(closest);                              //IMPROVEMENT: if negative go random
-				  	}
-				}	
+///////////////////////////for stateful
+	
+	public static int closestPositiveStation(Position pos1) {
+		List<Double> eDistances = new ArrayList<>();
+		Map<Double, Integer> indexEdistances = new HashMap<>();
+		
+		for(int i =0;i<50;i++) {
+			if(App.coins[i] > 0) {                                              // eDistances will be empty when you go through all the stations
+				double dist = Math.pow((pos1.latitude - App.latitudes[i]),2) + Math.pow((pos1.longitude - App.longitudes[i]),2);
+				eDistances.add(dist);
+				indexEdistances.put(dist, i);
+			}
+		}	
+		if(eDistances.isEmpty()) return -1;
+		Collections.sort(eDistances);
+		return indexEdistances.get(eDistances.get(0));
 	}
-			
+	
+   public static Direction getNextDirection(int closestStation) {
+	   List<Double> eDistances1 = new ArrayList<>();
+	   Map<Double, Direction> directionEdistances = new HashMap<>();
+	   for(Direction d : Position.allDirections) {
+		   Position pos1 = App.pos.nextPosition(d);
+		   if(pos1.inPlayArea()) {
+			   double dist1 = Math.pow((pos1.latitude - App.latitudes[closestStation]),2) + Math.pow((pos1.longitude - App.longitudes[closestStation]),2);
+			   eDistances1.add(dist1);
+			   directionEdistances.put(dist1, d);
+		   }
+	   }
+	
+	   Collections.sort(eDistances1);
+	   return directionEdistances.get(eDistances1.get(0));
+   }
+	
+	public static Position moveStateful(Direction d) {
+		App.pos = App.pos.nextPosition(d);
+		nrMoves++;
+  		dronePower -=1.25;
+  		return App.pos;
+	}
+	
+	public static int secondClosestPositiveStation(Position pos1) {
+		List<Double> eDistances = new ArrayList<>();
+		Map<Double, Integer> indexEdistances = new HashMap<>();
+		
+		for(int i =0;i<50;i++) {
+			if(App.coins[i] > 0) {                                              // eDistances will be empty when you go through all the stations
+				double dist = Math.pow((pos1.latitude - App.latitudes[i]),2) + Math.pow((pos1.longitude - App.longitudes[i]),2);
+				eDistances.add(dist);
+				indexEdistances.put(dist, i);
+			}
+		}	
+		if(eDistances.isEmpty()) return -1;
+		Collections.sort(eDistances);
+		return indexEdistances.get(eDistances.get(1));
+	}
+	
+	   public static Direction getSecondNextDirection(int closestStation) {
+		   List<Double> eDistances1 = new ArrayList<>();
+		   Map<Double, Direction> directionEdistances = new HashMap<>();
+		   for(Direction d : Position.allDirections) {
+			   Position pos1 = App.pos.nextPosition(d);
+			   if(pos1.inPlayArea()) {
+				   double dist1 = Math.pow((pos1.latitude - App.latitudes[closestStation]),2) + Math.pow((pos1.longitude - App.longitudes[closestStation]),2);
+				   eDistances1.add(dist1);
+				   directionEdistances.put(dist1, d);
+			   }
+		   }
+		   Collections.sort(eDistances1);
+		   return directionEdistances.get(eDistances1.get(1));
+	   }
+	
+	
+	
 	@SuppressWarnings("static-access")
 	public static void addToLine(Position new_point) {
 
@@ -152,7 +190,15 @@ public class Drone {
 		App.path = s_line.fromLngLats(list).toJson();
 
 	}
+}
+
+
 				
+
+
+
+
+
 			/*	  if(App.coins[j] > 0 && nrFeatures == 1) {                                             //if there is just one station in range and is positive then grab
 					  move(pos,nextPos);
 					  Drone.positiveCollect(j);   
@@ -208,7 +254,3 @@ public class Drone {
 			  }
 		}*/
 		  
-
-	
-
-}

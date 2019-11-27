@@ -35,7 +35,7 @@ public class App
 	protected static float coins[] = new float[50];
 	protected static String symbols[] = new String[50];
 	public static Random random;                                     //variable for going random
-	public static String path;   //path of the drone
+	public static String path;                                       //path of the drone
 	
 	//protected String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
 	
@@ -94,10 +94,11 @@ public class App
     	
     	random = new Random(5678);
     	
-    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2020/09/23/powergrabmap.geojson";
+    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/01/20/powergrabmap.geojson";
     	String mapSource = parseMap(mapString);
         getFeatures(mapSource);
-    	Stateless.startGame();
+    	//Stateless.startGameStateless();
+        Stateful.startGameStateful();
     	System.out.println(path);
     	System.out.println(Drone.dronePower);
     	System.out.println(Drone.droneCoins);
