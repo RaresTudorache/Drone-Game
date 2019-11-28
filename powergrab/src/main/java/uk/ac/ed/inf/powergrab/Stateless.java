@@ -33,10 +33,9 @@ public class Stateless extends Drone{
 			  		
 			  	}
 			  	else {
-			  		//move(d);
 			  		moveRandom(App.pos);
 			  		addToLine(App.pos);
-			  		//Drone.negativeCollect(closest);                              //IMPROVEMENT: if negative go random
+	
 			  	}
 			}	
 }

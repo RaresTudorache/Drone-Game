@@ -1,3 +1,4 @@
+ 
 package uk.ac.ed.inf.powergrab;
 
 import java.io.*;
@@ -94,7 +95,7 @@ public class App
     	
     	random = new Random(5678);
     	
-    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/01/20/powergrabmap.geojson";
+    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2020/11/28/powergrabmap.geojson";
     	String mapSource = parseMap(mapString);
         getFeatures(mapSource);
     	//Stateless.startGameStateless();
