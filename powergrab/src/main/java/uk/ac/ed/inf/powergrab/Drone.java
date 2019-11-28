@@ -168,15 +168,9 @@ public class Drone {
 		 nextDirections.add(dir);
 	 }
 	  return nextDirections;
-<<<<<<< HEAD
 	
    }
 	
-=======
-	
-   }
-	
->>>>>>> dbbc1c9a0ab3e0b68af31e828f2e0d5ede66c3bf
 	public static Position moveStateful(Direction d) {
 		App.pos = App.pos.nextPosition(d);
 		nrMoves++;

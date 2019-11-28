@@ -95,15 +95,11 @@ public class App
     	
     	random = new Random(5678);
     	
-<<<<<<< HEAD
     	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2020/11/28/powergrabmap.geojson";
-=======
-    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/02/20/powergrabmap.geojson";
->>>>>>> dbbc1c9a0ab3e0b68af31e828f2e0d5ede66c3bf
     	String mapSource = parseMap(mapString);
         getFeatures(mapSource);
     	//Stateless.startGameStateless();
-        Stateful.startGameStateful2();
+        Stateful.startGameStateful();
     	System.out.println(path);
     	System.out.println(Drone.dronePower);
     	System.out.println(Drone.droneCoins);
