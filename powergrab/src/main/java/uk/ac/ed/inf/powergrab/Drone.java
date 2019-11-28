@@ -152,11 +152,12 @@ public class Drone {
 				indexEdistances.put(dist, i);
 			}
 		}	
-		if(eDistances.isEmpty()) return res;
+		
 		Collections.sort(eDistances);
 		 for(int i=0;i<eDistances.size();i++) {
 			   res.add(indexEdistances.get(eDistances.get(i)));
 		   }
+		 if(eDistances.isEmpty()) return res;
 		return res;
    }
    
