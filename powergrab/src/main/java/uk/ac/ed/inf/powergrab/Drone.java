@@ -125,6 +125,7 @@ public class Drone {
 	
    public static Direction getNextDirection(int closestStation) {
 	   List<Double> eDistances1 = new ArrayList<>();
+	   
 	   Map<Double, Direction> directionEdistances = new HashMap<>();
 	   for(Direction d : Position.allDirections) {
 		   Position pos1 = App.pos.nextPosition(d);
@@ -134,9 +135,39 @@ public class Drone {
 			   directionEdistances.put(dist1, d);
 		   }
 	   }
-	
 	   Collections.sort(eDistances1);
+	
 	   return directionEdistances.get(eDistances1.get(0));
+   }
+   
+   public static ArrayList<Integer> getClosestStations(Position pos){
+	    List<Double> eDistances = new ArrayList<>();
+		Map<Double, Integer> indexEdistances = new HashMap<>();
+		ArrayList<Integer> res = new ArrayList<>();
+		
+		for(int i =0;i<50;i++) {
+			if(App.coins[i] > 0) {                                              // eDistances will be empty when you go through all the stations
+				double dist = Math.pow((pos.latitude - App.latitudes[i]),2) + Math.pow((pos.longitude - App.longitudes[i]),2);
+				eDistances.add(dist);
+				indexEdistances.put(dist, i);
+			}
+		}	
+		if(eDistances.isEmpty()) return res;
+		Collections.sort(eDistances);
+		 for(int i=0;i<eDistances.size();i++) {
+			   res.add(indexEdistances.get(eDistances.get(i)));
+		   }
+		return res;
+   }
+   
+   public static ArrayList<Direction> getNextDirections(List<Integer> res){
+	 ArrayList<Direction> nextDirections = new ArrayList<>();
+	 for(int i =0;i<res.size();i++) {
+		 Direction dir = getNextDirection(i);
+		 nextDirections.add(dir);
+	 }
+	  return nextDirections;
+	
    }
 	
 	public static Position moveStateful(Direction d) {
@@ -145,38 +176,6 @@ public class Drone {
   		dronePower -=1.25;
   		return App.pos;
 	}
-	
-	public static int secondClosestPositiveStation(Position pos1) {
-		List<Double> eDistances = new ArrayList<>();
-		Map<Double, Integer> indexEdistances = new HashMap<>();
-		
-		for(int i =0;i<50;i++) {
-			if(App.coins[i] > 0) {                                              // eDistances will be empty when you go through all the stations
-				double dist = Math.pow((pos1.latitude - App.latitudes[i]),2) + Math.pow((pos1.longitude - App.longitudes[i]),2);
-				eDistances.add(dist);
-				indexEdistances.put(dist, i);
-			}
-		}	
-		if(eDistances.isEmpty()) return -1;
-		Collections.sort(eDistances);
-		return indexEdistances.get(eDistances.get(1));
-	}
-	
-	   public static Direction getSecondNextDirection(int closestStation) {
-		   List<Double> eDistances1 = new ArrayList<>();
-		   Map<Double, Direction> directionEdistances = new HashMap<>();
-		   for(Direction d : Position.allDirections) {
-			   Position pos1 = App.pos.nextPosition(d);
-			   if(pos1.inPlayArea()) {
-				   double dist1 = Math.pow((pos1.latitude - App.latitudes[closestStation]),2) + Math.pow((pos1.longitude - App.longitudes[closestStation]),2);
-				   eDistances1.add(dist1);
-				   directionEdistances.put(dist1, d);
-			   }
-		   }
-		   Collections.sort(eDistances1);
-		   return directionEdistances.get(eDistances1.get(1));
-	   }
-	
 	
 	
 	@SuppressWarnings("static-access")
