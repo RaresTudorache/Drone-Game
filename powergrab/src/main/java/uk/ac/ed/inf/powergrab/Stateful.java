@@ -1,72 +1,14 @@
 package uk.ac.ed.inf.powergrab;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
 
 public class Stateful extends Drone{
 
-
-	
-/*	public static void goStatefulgo(Position nextPos, Direction dir) {
-		//int closestP = closestPositiveStation(nextPos);                          //look at the closest positive station
-		//Direction dir = getNextDirection(closestP);                              // get the direction of the next positive station 
-		//nextPos = moveStateful(dir);                                             //always move towards the closest positive station
-		//addToLine(App.pos);   //inainte sa te muti vezi daca e ok sa te muti acolo
-		int closestStation = getClosestStation(nextPos);                         //tine cont de cea mai apropiata statie din rangeul tau
-		int nrFeatures = nrFeaturesinRange(nextPos);  							 //verifica daca sunt in range si cate sunt
-		
-		if(nrFeatures == 0) {
-			nextPos = moveStateful(dir);    									  //always move towards the closest positive station
-			addToLine(App.pos);
-		}
-		else if(nrFeatures == 1) {
-			if(App.coins[closestStation] > 0) {
-				App.pos = moveStateful(dir);    									  //always move towards the closest positive station
-				addToLine(App.pos);
-				positiveCollect(closestStation);
-			}
-			else return;         //if the station is negative
-			                     //go to the next closest station                                     				                                                     
-		}
-		else {
-			if(App.coins[closestStation] > 0) {
-				App.pos = moveStateful(dir);    									  //always move towards the closest positive station
-				addToLine(App.pos);
-				positiveCollect(closestStation);
-			}
-			else return;
-		}
-	}*/
-
-	/*public static void ifnot(Position pos) {
-		ArrayList<Integer> closestStations = getClosestStations(pos);
-		 ArrayList<Direction> orderedDirections = getNextDirections(closestStations);
-		
-		for(Direction d : orderedDirections) {
-			  pos = App.pos.nextPosition(d);
-			if(pos.inPlayArea()) {
-			  goStatefulgo(pos,d);
-			}
-		}
-	}*/
-	
-	//public static Direction dontGo(Position nextPos) {
-		//int closestStation = getClosestStation(nextPos); 
-		//int nrFeatures = nrFeaturesinRange(nextPos);  
-	//}
-	
-	/*public static double getMinDistance(Position pos) {
-		double min = Double.MAX_VALUE;
-		for(int i = 0;i<50;i++) {
-			if(App.coins[i]> 0) {
-				double dist = Math.pow((pos.latitude - App.latitudes[i]),2) + Math.pow((pos.longitude - App.longitudes[i]),2);
-				if(dist < min) {
-					min = dist;
-				}
-			}
-		}
-	}*/
 	
 	public static boolean notInNegativeRange(Position pos) {
 		int closestStation = getClosestStation(pos);  
@@ -75,6 +17,16 @@ public class Stateful extends Drone{
 		
 		return true;
 	}
+	
+	 public static ArrayList<Direction> getNextDirections(ArrayList<Integer> res){
+		 ArrayList<Direction> nextDirections = new ArrayList<>();
+		 for(int i =0;i<res.size();i++) {
+			 Direction dir = getNextDirection(i);
+			 nextDirections.add(dir);
+		 }
+		  return nextDirections;
+		
+	   }
 	
 	public static int targetStation(Position pos) {
 		double min =Double.MAX_VALUE;
@@ -90,54 +42,98 @@ public class Stateful extends Drone{
 		}
 		return k;
 	}
- 
 	
+	 public static Direction getNextDirection(int closestStation) {
+		   ArrayList<Double> eDistances1 = new ArrayList<>();
+		   
+		   Map<Double, Direction> directionEdistances = new HashMap<>();
+		   for(Direction d : Position.allDirections) {
+			   Position pos1 = App.pos.nextPosition(d);
+			   if(pos1.inPlayArea()) {
+				   if(closestStation == -1 || App.coins[closestStation]>0) {
+					   double dist1 = Math.pow((pos1.latitude - App.latitudes[closestStation]),2) + Math.pow((pos1.longitude - App.longitudes[closestStation]),2);
+					   eDistances1.add(dist1);
+					   directionEdistances.put(dist1, d);
+				   }
+				   
+			   }
+		   }
+		   Collections.sort(eDistances1);
+		
+		   return directionEdistances.get(eDistances1.get(0));
+	   }
+	 
+	 public static boolean noNegatives(Position pos) {
+		 int closestStation = getClosestStation(pos);
+		 if(closestStation == -1 || App.coins[closestStation] > 0)
+			 return true;
+		 
+		 return false;
+	 }
+	 
+	 public static Direction getNextDirection2(int station) {
+		 
+		 double min =Double.MAX_VALUE;
+		 Direction dir =null;
+		 //if(station == -1) return dir;
+		 for(Direction d : Position.allDirections) {
+			 Position pos = App.pos.nextPosition(d);
+			 if(pos.inPlayArea() && noNegatives(pos)) {
+				
+					 double dist = Math.pow((pos.latitude - App.latitudes[station]),2) + Math.pow((pos.longitude - App.longitudes[station]),2);
+					 if(dist < min) {
+							min = dist;
+							dir = d;
+					}
+				 
+			 }
+			 
+		 }
+		 return dir;
+	 }
+	 
+	 public static void moveRandomStateful() {
+		 
+	 }
+	   
+ 
+	//getclosestStation - ia cea mai apropiata statie din rangeul tau
+	//getNextDirection - ia directia celei mai apropiate statii
 	public static void startGameStateful() {
 		
 		App.path = App.initializeLineString2();
 		
 		Direction d = null;
-		int target= targetStation(App.pos);
+		//Position p = new Position(55.9447, -3.1887);
+		//int target = targetStation(App.pos);
+		int target = closestPositiveStation(App.pos);
+		//System.out.println(noNegatives(p));
+		System.out.println(target);
+		System.out.println(App.coins[target]);
+		System.out.println(App.latitudes[target]);
+		System.out.println(App.longitudes[target]);
+		
 		
 		while(dronePower >= 1.25 && nrMoves<250) {
-			d = getNextDirection(target);
-		   for(Direction dir : Position.allDirections) {
-			   Position nextPos = App.pos.nextPosition(dir);
-			   int closest = getClosestStation(nextPos);      //ia cea mai apropiata statie din range
-			  
-			   if(nextPos.inPlayArea()) {
-			       if(closest == -1 || App.coins[closest]>0) {
-			    	   d = getNextDirection(target);
-			       }
-			      
-//closest == -1 inseamna ca nu e nicio statie in range
-			   
-			   if(target == -1)  {   //daca s au terminat verzile
-				   moveRandom(nextPos);                   //plimba te random fara rosii
-			   }
-			  }
-		   }
-		   //fa o functie care sa te mute la target care ia ca parametru pozitia actuala
-		  //System.out.println(d);
-		  App.pos = moveStateful(d);
-		  addToLine(App.pos);
-		  //System.out.println("mutare");
-		  if(stationInRange(App.pos, target)) {
-			  positiveCollect(target);
-			  //fa nou target
-			  target = targetStation(App.pos);
-		  }
-		  else {
-			  App.pos = moveStateful(d);
-			  addToLine(App.pos);
-		  }
+			if(target == -1) {
+				moveRandom(App.pos); //daca ai vizitat toate statiile pozitive muta te random
+			}
+			else {
+			d = getNextDirection2(target);    //daca viitoarea pozitie nu are nimic in range sau are ceva
 			
+			//System.out.println(d);
+			
+			App.pos = moveStateful(d);
+			addToLine(App.pos);
+		
+			int closest = getClosestStation(App.pos);
+	
+			   if(target == closest) {
+				positiveCollect(target);
+				target = closestPositiveStation(App.pos);
+			}
+			}
+	       
 		}
-	}		
-	  /* double dist = Math.pow((nextPos.latitude - App.latitudes[target]),2) + Math.pow((nextPos.longitude - App.longitudes[target]),2);
-	   if(dist < min) {
-		   min = dist;
-		   d = dir;
-	   }*/
-	   //int closest = getClosestStation(nextPos);
+	}	
 }

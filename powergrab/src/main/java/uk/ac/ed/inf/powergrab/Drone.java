@@ -123,23 +123,7 @@ public class Drone {
 		return indexEdistances.get(eDistances.get(0));
 	}
 	
-   public static Direction getNextDirection(int closestStation) {
-	   List<Double> eDistances1 = new ArrayList<>();
-	   
-	   Map<Double, Direction> directionEdistances = new HashMap<>();
-	   for(Direction d : Position.allDirections) {
-		   Position pos1 = App.pos.nextPosition(d);
-		   if(pos1.inPlayArea()) {
-			   double dist1 = Math.pow((pos1.latitude - App.latitudes[closestStation]),2) + Math.pow((pos1.longitude - App.longitudes[closestStation]),2);
-			   eDistances1.add(dist1);
-			   directionEdistances.put(dist1, d);
-		   }
-	   }
-	   Collections.sort(eDistances1);
-	
-	   return directionEdistances.get(eDistances1.get(0));
-   }
-   
+  
    public static ArrayList<Integer> getClosestStations(Position pos){
 	    List<Double> eDistances = new ArrayList<>();
 		Map<Double, Integer> indexEdistances = new HashMap<>();
@@ -161,16 +145,7 @@ public class Drone {
 		return res;
    }
    
-   public static ArrayList<Direction> getNextDirections(List<Integer> res){
-	 ArrayList<Direction> nextDirections = new ArrayList<>();
-	 for(int i =0;i<res.size();i++) {
-		 Direction dir = getNextDirection(i);
-		 nextDirections.add(dir);
-	 }
-	  return nextDirections;
-	
-   }
-	
+
 	public static Position moveStateful(Direction d) {
 		App.pos = App.pos.nextPosition(d);
 		nrMoves++;
