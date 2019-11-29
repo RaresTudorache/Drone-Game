@@ -92,10 +92,30 @@ public class Stateful extends Drone{
 		 return dir;
 	 }
 	 
-	 public static void moveRandomStateful() {
+	 public static Direction getNextDirectionNegatives(int station) {
 		 
+		 double min =Double.MAX_VALUE;
+		 Direction dir =null;
+		 //if(station == -1) return dir;
+		 for(Direction d : Position.allDirections) {
+			 Position pos = App.pos.nextPosition(d);
+			 if(pos.inPlayArea()) {
+				
+					 double dist = Math.pow((pos.latitude - App.latitudes[station]),2) + Math.pow((pos.longitude - App.longitudes[station]),2);
+					 if(dist < min) {
+							min = dist;
+							dir = d;
+					}
+				 
+			 }
+			 
+		 }
+		 return dir;
 	 }
+	 
+   public static void goRandom(Position pos) {
 	   
+   }
  
 	//getclosestStation - ia cea mai apropiata statie din rangeul tau
 	//getNextDirection - ia directia celei mai apropiate statii
@@ -116,12 +136,13 @@ public class Stateful extends Drone{
 		
 		while(dronePower >= 1.25 && nrMoves<250) {
 			if(target == -1) {
-				moveRandom(App.pos); //daca ai vizitat toate statiile pozitive muta te random
+				int random16 = App.random.nextInt(16);
+			    d = getNextDirection2(random16);
+			    App.pos = moveStateful(d);
+			    addToLine(App.pos);
 			}
 			else {
-			d = getNextDirection2(target);    //daca viitoarea pozitie nu are nimic in range sau are ceva
-			
-			//System.out.println(d);
+			d = getNextDirection2(target);    //daca viitoarea pozitie nu are nimic in range sau are ceva positiv
 			
 			App.pos = moveStateful(d);
 			addToLine(App.pos);
