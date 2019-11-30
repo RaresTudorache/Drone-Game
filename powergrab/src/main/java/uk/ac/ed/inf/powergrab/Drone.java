@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
@@ -17,6 +18,7 @@ public class Drone {
 	protected static double dronePower = 250.0;
 	protected static int nrMoves = 0;
 	protected static double droneCoins = 0;
+	protected static String outputTXT;
 
 	
 	protected static void positiveCollect(int k) {                                                     //if the station is positive connect
@@ -81,20 +83,84 @@ public class Drone {
 	}
 	
 	public static void move(Direction d) {
+		dronePower -= 1.25;
+		 if(nrMoves == 0)
+	  	   outputTXT =  App.pos.latitude + "," + App.pos.longitude + "," + d + ","
+					+ App.pos.nextPosition(d).latitude + "," + App.pos.nextPosition(d).longitude + "," + droneCoins
+					+ "," + dronePower + '\n';
+		else outputTXT += App.pos.latitude + "," + App.pos.longitude + "," + d + ","
+				+ App.pos.nextPosition(d).latitude + "," + App.pos.nextPosition(d).longitude + "," + droneCoins
+				+ "," + dronePower+ '\n';
+
 		App.pos = App.pos.nextPosition(d);
 		nrMoves++;
-  		dronePower -=1.25;
+  		//dronePower -=1.25;
 	}
-		
-	public static void moveRandom(Position simPos) {
+
+	
+	public static boolean moveTest(Position simPos) {
 		int random16 = App.random.nextInt(16);
 		simPos = App.pos.nextPosition(Direction.values()[random16]);
-		if(simPos.inPlayArea()) {
+	/*	if(nrMoves == 0)
+		  	   outputTXT =  App.pos.latitude + "," + App.pos.longitude + "," + Direction.values()[random16] + ","
+						+ App.pos.nextPosition(Direction.values()[random16]).latitude + "," + App.pos.nextPosition(Direction.values()[random16]).longitude + "," + droneCoins
+						+ "," + dronePower+ '\n';
+		else outputTXT += App.pos.latitude + "," + App.pos.longitude + "," + Direction.values()[random16] + ","
+					+ App.pos.nextPosition(Direction.values()[random16]).latitude + "," + App.pos.nextPosition(Direction.values()[random16]).longitude + "," + droneCoins
+					+ "," + dronePower+ '\n';
+					*/
+		if(simPos.inPlayArea()) 
+			return true;
+			
+		else 
+			moveTest(simPos);
+		
+		return false;
+	}
+	public static int getRandomWithExclusion(Random rnd, int start, int end, ArrayList<Integer> wrongStations) {
+	    int random = start + rnd.nextInt(end - start + 1 - wrongStations.size());
+	    for (Integer ex : wrongStations) {
+	        if (random < ex) {
+	            break;
+	        }
+	        random++;
+	    }
+	    return random;
+	}
+	
+	public static ArrayList<Integer> takeNext(Position simPos) {
+		//ArrayList<Position> wrongDirections = new ArrayList<>();
+		ArrayList<Integer> wrongStations = new ArrayList<>();
+		for(Direction d : Position.allDirections) {
+			simPos = App.pos.nextPosition(d);
+			if(!simPos.inPlayArea()) {
+				int k = Arrays.asList(Direction.values()).indexOf(d);
+				wrongStations.add(k);
+			}
+		}
+		return wrongStations;
+	}	
+	
+	public static void moveRandom(Position simPos) {
+		int randomInt = getRandomWithExclusion(App.random, 0, 15, takeNext(simPos));
+		
+		simPos = App.pos.nextPosition(Direction.values()[randomInt]);
+		dronePower -= 1.25;
+		  if(nrMoves == 0)
+	  	   outputTXT =  App.pos.latitude + "," + App.pos.longitude + "," + Direction.values()[randomInt] + ","
+					+ App.pos.nextPosition(Direction.values()[randomInt]).latitude + "," + App.pos.nextPosition(Direction.values()[randomInt]).longitude + "," + droneCoins
+					+ "," + dronePower+ '\n';
+	      else outputTXT += App.pos.latitude + "," + App.pos.longitude + "," + Direction.values()[randomInt] + ","
+				+ App.pos.nextPosition(Direction.values()[randomInt]).latitude + "," + App.pos.nextPosition(Direction.values()[randomInt]).longitude + "," + droneCoins
+				+ "," + dronePower+ '\n';
+				
+	
 			App.pos = simPos;
 			nrMoves++;
-			dronePower -= 1.25;
-		}
+			//dronePower -= 1.25;
+	
 	}
+
 
 	public static int nrFeaturesinRange(Position nextPos) {
 		int nr = 0;

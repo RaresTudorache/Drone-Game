@@ -28,7 +28,7 @@ import com.google.gson.JsonElement;
 public class App 
 {
 
-	protected static Position pos = new Position(55.944425, -3.188396);
+	protected static Position pos;
 
 	protected static double latitudes[] = new double[50];   //geometry[1]
 	protected static double longitudes[] = new double[50];  //geometry[0]
@@ -74,7 +74,7 @@ public class App
     	for(int i=0;i<F.size();i++) {
     		
     		Point p = (Point) F.get(i).geometry();                                           	//g is a geometry object(it may also be a point)
-    		                                                                                    //if p is a Point, then p.coordinates() is a list of double precision numbers!!!
+    		                                                                                    //if p is a Point, then p0.coordinates() is a list of double precision numbers!!!
     		longitudes[i] = p.coordinates().get(0);                                                     //coins and power are floating point numbers
     		latitudes[i] = p.coordinates().get(1);                                                   //if f is a Feature with property coins, then f.getProperty("coins") is a JsonElement
     		coins[i] = F.get(i).getProperty("coins").getAsFloat();                              //convert a JsonElement using method such as getAsString() and getAsFloat() 
@@ -92,17 +92,37 @@ public class App
 	}
 
     public static void main( String[] args ) throws IOException 	{
+    	String day = args[0];
+		String month = args[1];
+		String year = args[2];
+		Double lat = Double.parseDouble(args[3]);
+		Double Long = Double.parseDouble(args[4]);
+		int seed = Integer.parseInt(args[5]);
+		String droneMode = args[6];
+        
+		long initialtime = System.currentTimeMillis();
+		pos = new Position(lat,Long);
+		
+		random = new Random(seed);
+		String mapSource = parseMap("http://homepages.inf.ed.ac.uk/stg/powergrab/" + year + "/" + month + "/" + day + "/"
+				+ "powergrabmap.geojson");
+		getFeatures(mapSource);
     	
-    	random = new Random(5678);
     	
-    	String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2020/01/01/powergrabmap.geojson";
-    	String mapSource = parseMap(mapString);
-        getFeatures(mapSource);
-    	//Stateless.startGameStateless();
-        Stateful.startGameStateful();
+        if(droneMode.equals("stateless"))  
+    	     Stateless.startGameStateless();
+        else
+             Stateful.startGameStateful();
+        long stoptime = System.currentTimeMillis();
     	System.out.println(path);
-    	System.out.println(Drone.dronePower);
+    	//System.out.println(Drone.dronePower);
     	System.out.println(Drone.droneCoins);
     	System.out.println(Drone.nrMoves);
+    	
+       
+    	PrintWriter writer = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".txt", "UTF-8");
+    	writer.println(Drone.outputTXT);
+    	writer.close();
+
     }
 }

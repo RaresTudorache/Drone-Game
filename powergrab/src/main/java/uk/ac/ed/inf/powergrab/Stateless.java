@@ -26,7 +26,7 @@ public class Stateless extends Drone{
 			}
 			else {                  			//if there is more than on e station in range
 			
-			  	if(App.coins[closest] > 0) {                                                         //if the closest station is positive
+			  	if(App.coins[closest] > 0) {  //if the closest station is positive
 			  		move(d);
 			  		addToLine(App.pos);
 			  		positiveCollect(closest);
@@ -39,22 +39,29 @@ public class Stateless extends Drone{
 			  	}
 			}	
 }
-
+   
 	
    public static void startGameStateless() {
 	  App.path = App.initializeLineString2();
-	  
+	 int nr =0;
 	  while(dronePower >= 1.25 && nrMoves<250) {
 		  for (Direction d : Position.allDirections) {
 			  Position nextPos = App.pos.nextPosition(d);
 			  if(nextPos.inPlayArea()) {
+				  nr++;
 				  goStatelessGo(nextPos,d);
 			      break;
 		      }
 		 }
 	  }
-	  
+	  System.out.println(nr);
 	}
-	
-
 }
+	/*
+	 * if(nrMoves != 0) {
+					   outputTXT += '\n'; 
+				   }
+			  	   outputTXT = outputTXT + App.pos.latitude + "," + App.pos.longitude + "," + d + ","
+							+ App.pos.nextPosition(d).latitude + "," + App.pos.nextPosition(d).longitude + "," + droneCoins
+							+ "," + dronePower;
+	 */

@@ -113,14 +113,29 @@ public class Stateful extends Drone{
 		 return dir;
 	 }
 	 
-   public static void goRandom(Position pos) {
-	   
-   }
+	 public static boolean equalss(Position pos, Position pos1) {
+		 if(pos.latitude == pos1.latitude && pos.longitude == pos1.longitude)
+			 return true;
+		 
+		 return false;
+	 }
+	 
+	 public static boolean containsKeyy(Position pos, HashMap<Position, Integer> help) {
+		
+		 for( Position pos1 : help.keySet()) {
+			 if(equalss(pos1,pos)) return true;	
+     	}
+		 
+		 return false;
+	 }
+ 
  
 	//getclosestStation - ia cea mai apropiata statie din rangeul tau
 	//getNextDirection - ia directia celei mai apropiate statii
 	public static void startGameStateful() {
-		
+		HashMap<Position, Integer> help = new HashMap<>();
+		ArrayList<Position> help2 = new ArrayList<>();
+		//int nr =0;
 		App.path = App.initializeLineString2();
 		
 		Direction d = null;
@@ -128,12 +143,12 @@ public class Stateful extends Drone{
 		//int target = targetStation(App.pos);
 		int target = closestPositiveStation(App.pos);
 		//System.out.println(noNegatives(p));
-		System.out.println(target);
-		System.out.println(App.coins[target]);
-		System.out.println(App.latitudes[target]);
-		System.out.println(App.longitudes[target]);
-		
-		
+		//System.out.println(target);
+		//System.out.println(App.coins[target]);
+		//System.out.println(App.latitudes[target]);
+		//System.out.println(App.longitudes[target]);
+		help2.add(App.pos);
+		help.put(App.pos, 1);
 		while(dronePower >= 1.25 && nrMoves<250) {
 			if(target == -1) {
 				int random16 = App.random.nextInt(16);
@@ -146,6 +161,34 @@ public class Stateful extends Drone{
 			
 			App.pos = moveStateful(d);
 			addToLine(App.pos);
+			
+			///////////////////////
+		/*	
+			help2.add(App.pos);
+
+            for(Position p : help2) {
+            	//System.out.println(p);
+              if(containsKeyy(p, help)) {
+            	 System.out.println(containsKeyy(p, help));
+        		help.put(p, help.get(p) + 1);
+              }
+              //else {
+            	//  help.put(p, 1); 
+            	 // System.out.println(help.get(p));
+             // }
+             }
+		
+			for(Position pos : help.keySet()) {
+			
+				if(help.get(pos) > 3) {
+					int random16 = App.random.nextInt(16);
+				    d = getNextDirection2(random16);
+				    App.pos = moveStateful(d);
+				    addToLine(App.pos);
+				    target = closestPositiveStation(App.pos);
+				}
+			}*/
+		/////////////////////////////////
 		
 			int closest = getClosestStation(App.pos);
 	
@@ -158,3 +201,8 @@ public class Stateful extends Drone{
 		}
 	}	
 }
+//fixat bug
+//file txt pus la punct
+//file geojson
+//comentat cod
+//raport
