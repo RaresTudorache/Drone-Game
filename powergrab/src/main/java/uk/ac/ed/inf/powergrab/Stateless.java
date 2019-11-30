@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
-
+import com.mapbox.geojson.Point;
 
 public class Stateless extends Drone{
 	
@@ -11,6 +11,8 @@ public class Stateless extends Drone{
 			if(nrFeatures == 1) {
 				if(App.coins[closest] >0 ) {
 					move(d);
+					System.out.println(App.pos);
+					//App.path.add(Point.fromLngLat(App.pos.longitude, App.pos.latitude));
 					addToLine(App.pos);
 					positiveCollect(closest);	
 				}
@@ -42,7 +44,7 @@ public class Stateless extends Drone{
    
 	
    public static void startGameStateless() {
-	  App.path = App.initializeLineString2();
+	  //App.path = App.initializeLineString2();
 	 int nr =0;
 	  while(dronePower >= 1.25 && nrMoves<250) {
 		  for (Direction d : Position.allDirections) {
@@ -57,11 +59,4 @@ public class Stateless extends Drone{
 	  System.out.println(nr);
 	}
 }
-	/*
-	 * if(nrMoves != 0) {
-					   outputTXT += '\n'; 
-				   }
-			  	   outputTXT = outputTXT + App.pos.latitude + "," + App.pos.longitude + "," + d + ","
-							+ App.pos.nextPosition(d).latitude + "," + App.pos.nextPosition(d).longitude + "," + droneCoins
-							+ "," + dronePower;
-	 */
+	

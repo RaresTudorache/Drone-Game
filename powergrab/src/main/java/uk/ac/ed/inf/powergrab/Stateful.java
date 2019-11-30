@@ -133,33 +133,33 @@ public class Stateful extends Drone{
 	//getclosestStation - ia cea mai apropiata statie din rangeul tau
 	//getNextDirection - ia directia celei mai apropiate statii
 	public static void startGameStateful() {
-		HashMap<Position, Integer> help = new HashMap<>();
-		ArrayList<Position> help2 = new ArrayList<>();
+		//HashMap<Position, Integer> help = new HashMap<>();
+		//ArrayList<Position> help2 = new ArrayList<>();
 		//int nr =0;
-		App.path = App.initializeLineString2();
+		//App.path = App.initializeLineString2();
 		
 		Direction d = null;
 		//Position p = new Position(55.9447, -3.1887);
 		//int target = targetStation(App.pos);
 		int target = closestPositiveStation(App.pos);
-		//System.out.println(noNegatives(p));
-		//System.out.println(target);
-		//System.out.println(App.coins[target]);
-		//System.out.println(App.latitudes[target]);
-		//System.out.println(App.longitudes[target]);
-		help2.add(App.pos);
-		help.put(App.pos, 1);
+
+		//help2.add(App.pos);
+		//help.put(App.pos, 1);
 		while(dronePower >= 1.25 && nrMoves<250) {
 			if(target == -1) {
-				int random16 = App.random.nextInt(16);
-			    d = getNextDirection2(random16);
+				int randomInt = getRandomWithExclusion(App.random, 0, 15, takeNext(App.pos));
+				//int random16 = App.random.nextInt(16);
+			    d = getNextDirection2(randomInt);
 			    App.pos = moveStateful(d);
+			    
 			    addToLine(App.pos);
 			}
 			else {
 			d = getNextDirection2(target);    //daca viitoarea pozitie nu are nimic in range sau are ceva positiv
 			
 			App.pos = moveStateful(d);
+		
+			
 			addToLine(App.pos);
 			
 			///////////////////////

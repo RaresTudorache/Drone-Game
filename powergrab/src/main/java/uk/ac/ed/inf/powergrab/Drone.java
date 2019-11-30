@@ -98,25 +98,6 @@ public class Drone {
 	}
 
 	
-	public static boolean moveTest(Position simPos) {
-		int random16 = App.random.nextInt(16);
-		simPos = App.pos.nextPosition(Direction.values()[random16]);
-	/*	if(nrMoves == 0)
-		  	   outputTXT =  App.pos.latitude + "," + App.pos.longitude + "," + Direction.values()[random16] + ","
-						+ App.pos.nextPosition(Direction.values()[random16]).latitude + "," + App.pos.nextPosition(Direction.values()[random16]).longitude + "," + droneCoins
-						+ "," + dronePower+ '\n';
-		else outputTXT += App.pos.latitude + "," + App.pos.longitude + "," + Direction.values()[random16] + ","
-					+ App.pos.nextPosition(Direction.values()[random16]).latitude + "," + App.pos.nextPosition(Direction.values()[random16]).longitude + "," + droneCoins
-					+ "," + dronePower+ '\n';
-					*/
-		if(simPos.inPlayArea()) 
-			return true;
-			
-		else 
-			moveTest(simPos);
-		
-		return false;
-	}
 	public static int getRandomWithExclusion(Random rnd, int start, int end, ArrayList<Integer> wrongStations) {
 	    int random = start + rnd.nextInt(end - start + 1 - wrongStations.size());
 	    for (Integer ex : wrongStations) {
@@ -213,23 +194,37 @@ public class Drone {
    
 
 	public static Position moveStateful(Direction d) {
+		dronePower -=1.25;
+		if(nrMoves == 0)
+		  	   outputTXT =  App.pos.latitude + "," + App.pos.longitude + "," + d + ","
+						+ App.pos.nextPosition(d).latitude + "," + App.pos.nextPosition(d).longitude + "," + droneCoins
+						+ "," + dronePower + '\n';
+			else outputTXT += App.pos.latitude + "," + App.pos.longitude + "," + d + ","
+					+ App.pos.nextPosition(d).latitude + "," + App.pos.nextPosition(d).longitude + "," + droneCoins
+					+ "," + dronePower+ '\n';
+
 		App.pos = App.pos.nextPosition(d);
 		nrMoves++;
-  		dronePower -=1.25;
+  		//dronePower -=1.25;
   		return App.pos;
 	}
 	
 	
-	@SuppressWarnings("static-access")
+	
 	public static void addToLine(Position new_point) {
 
-		LineString temp = LineString.fromJson(App.path);
+	/*	LineString temp = LineString.fromJson(App.path);
 		ArrayList<Point> list = (ArrayList<Point>) temp.coordinates();
 		Point new_p = Point.fromLngLat(new_point.longitude, new_point.latitude);
 		list.add(new_p);
 		LineString s_line = LineString.fromJson(App.path);
 		App.path = s_line.fromLngLats(list).toJson();
-
+*/
+		Position p = new Position(new_point.longitude, new_point.latitude);
+		if(p.equals(null)) return;
+		else
+		App.path.add(Point.fromLngLat(new_point.longitude, new_point.latitude));
+		
 	}
 }
 

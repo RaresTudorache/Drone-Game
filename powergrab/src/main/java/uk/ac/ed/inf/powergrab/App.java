@@ -36,7 +36,8 @@ public class App
 	protected static float coins[] = new float[50];
 	protected static String symbols[] = new String[50];
 	public static Random random;                                     //variable for going random
-	public static String path;                                       //path of the drone
+	//public static String path;                                       //path of the drone
+	public static ArrayList<Point> path = new ArrayList<>();
 	
 	//protected String mapString = "http://homepages.inf.ed.ac.uk/stg/powergrab/2019/09/15/powergrabmap.geojson";
 	
@@ -90,6 +91,7 @@ public class App
 		return init + pos_str + end;
 
 	}
+    
 
     public static void main( String[] args ) throws IOException 	{
     	String day = args[0];
@@ -120,9 +122,20 @@ public class App
     	System.out.println(Drone.nrMoves);
     	
        
-    	PrintWriter writer = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".txt", "UTF-8");
-    	writer.println(Drone.outputTXT);
-    	writer.close();
+    	PrintWriter writerTxt = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".txt", "UTF-8");
+    	writerTxt.println(Drone.outputTXT);
+    	writerTxt.close();
 
+    	LineString ls = LineString.fromLngLats(path);  //we create a LineString from the list of coordinates														   
+		Feature f = Feature.fromGeometry(ls);  //we then create a new feature from the LineString above
+		FeatureCollection fc = FeatureCollection.fromJson(mapSource);  //we put the feature collection in a local variable
+		List<Feature> list = fc.features(); //extract the list of features
+		list.add(f); //add the newly created feature to the list
+		String res = FeatureCollection.fromFeatures(list).toJson();  //we parse the final feature collection
+		
+		PrintWriter writerGeojson = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".geojson", "UTF-8");
+    	writerGeojson.println(res);
+    	writerGeojson.close();
+		
     }
 }
