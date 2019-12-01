@@ -11,10 +11,12 @@ import java.util.Random;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
 
 
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Point;
 
@@ -102,14 +104,14 @@ public class App
     	
         if(droneMode.equals("stateless"))  
     	     Stateless.startGameStateless();
-        else
+        else if(droneMode.equals("stateful"))
              Stateful.startGameStateful();
        
     	System.out.println(Drone.droneCoins);
     	
-    	/*
+    	
        
-    	PrintWriter writerTxt = new PrintWriter(day + "-" +  month + "-" + year + "-" + droneMode + ".txt", "UTF-8");
+    	PrintWriter writerTxt = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".txt", "UTF-8");
     	writerTxt.println(Drone.outputTXT);
     	writerTxt.close();
 
@@ -120,9 +122,9 @@ public class App
 		listOfFeatures.add(feature); 													    //add the new feature (which is a LineString) to the list of Features
 		String outputGeojson = FeatureCollection.fromFeatures(listOfFeatures).toJson();     //parse the result to Geojson
 		
-		PrintWriter writerGeojson = new PrintWriter(day + "-" +  month + "-" + year + "-" + droneMode + ".geojson", "UTF-8");
+		PrintWriter writerGeojson = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".geojson", "UTF-8");
     	writerGeojson.println(outputGeojson);
     	writerGeojson.close();
-		*/
+		
     }
 }

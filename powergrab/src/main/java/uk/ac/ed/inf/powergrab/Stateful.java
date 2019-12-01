@@ -1,9 +1,13 @@
 package uk.ac.ed.inf.powergrab;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.mapbox.geojson.Point;
 
 public class Stateful extends Drone{
+	
 
 	protected static Position moveStateful(Direction d) {                                                   //very similar with the move(Direction d) method used for the stateless drone
 		dronePower -=1.25;
@@ -116,6 +120,7 @@ public class Stateful extends Drone{
 			    d = getNextDirection(randomInt);                                           //when the drone runs out of positive stations go to a random valid position
 			    App.pos = moveStateful(d);                                                 //move as required and add to the path
 			    App.path.add(Point.fromLngLat(App.pos.longitude, App.pos.latitude));
+			    
 			}
 			else {
 			d = getNextDirection(target);                                                  //get the direction of the target
@@ -125,7 +130,7 @@ public class Stateful extends Drone{
 
 			int closest = getClosestStation(App.pos);                                      //take the closest station from the current position
 	
-			   if(target == closest) {                                                     //if the drone reached the target, connect to it
+			  if(target == closest) {                                                     //if the drone reached the target, connect to it
 				positiveCollect(target);
 				target = targetStation(App.pos);                                           //calculate the new target and loop again
 			  }

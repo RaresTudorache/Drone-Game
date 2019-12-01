@@ -77,8 +77,6 @@ public class Drone {
 		return indexEdistances.get(eDistances.get(0));
 		
 	}
-
-	
 	 public static boolean noNegatives(Position pos) {                                    //this method return false if the closest station from the current position is negative
 		 int closestStation = getClosestStation(pos);
 		 if(closestStation == -1 || App.coins[closestStation] > 0)
@@ -98,6 +96,7 @@ public class Drone {
 	    }
 	    return random;
 	}
+
 	
 	public static ArrayList<Integer> badStations(Position simPos) {                                         //this method returns an ArrayList with all next positions that are not valid
 		ArrayList<Integer> wrongStations = new ArrayList<>();
@@ -128,7 +127,6 @@ public class Drone {
 		App.pos = simPos;
 		nrMoves++;
 	}
-
 
 	public static int nrFeaturesinRange(Position nextPos) {                                           //method for counting the number of stations in the range of a position
 		int nr = 0;
