@@ -56,7 +56,7 @@ public class Stateless extends Drone{
 			  	}
 			}	
 	}
-	 /* 		int closest2 = getClosestStation(App.pos); 	
+	 /* int closest2 = getClosestStation(App.pos); 	
 		if(closest2 == -1) return;                                                   //if there is no station in range, exit the function
 		else if(App.coins[closest2] < 0) negativeCollect(closest2);                  //if the closest station from the random position is negative then connect to it
 */  

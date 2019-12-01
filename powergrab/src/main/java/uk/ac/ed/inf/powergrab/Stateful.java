@@ -1,8 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.mapbox.geojson.Point;
 

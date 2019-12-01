@@ -88,6 +88,7 @@ public class Drone {
 	
 	public static int getRandomWithExclusion(Random rnd, int start, int end, ArrayList<Integer> wrongStations) {         //method for taking a random number excluding the ones that are
 	    int random = start + rnd.nextInt(end - start + 1 - wrongStations.size());                                        //added to the list
+	   
 	    for (Integer ex : wrongStations) {
 	        if (random < ex) {
 	            break;
