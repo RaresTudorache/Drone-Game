@@ -1,23 +1,43 @@
 package uk.ac.ed.inf.powergrab;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.awt.List;
-import java.util.ArrayList;
-import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
+
+
+import com.mapbox.geojson.Point;
 
 public class Stateful extends Drone{
 
-	
-	public static boolean notInNegativeRange(Position pos) {
-		int closestStation = getClosestStation(pos);  
-		if(closestStation == -1) return true;             //tine cont de cea mai apropiata statie din rangeul tau
-		else if(App.coins[closestStation] < 0 ) return false;
-		
-		return true;
+	protected static Position moveStateful(Direction d) {                                                   //very similar with the move(Direction d) method used for the stateless drone
+		dronePower -=1.25;
+		if(nrMoves == 0)
+		  	   outputTXT =  App.pos.latitude + "," + App.pos.longitude + "," + d + ","
+						+ App.pos.nextPosition(d).latitude + "," + App.pos.nextPosition(d).longitude + "," + droneCoins
+						+ "," + dronePower + '\n';
+			else outputTXT += App.pos.latitude + "," + App.pos.longitude + "," + d + ","
+					+ App.pos.nextPosition(d).latitude + "," + App.pos.nextPosition(d).longitude + "," + droneCoins
+					+ "," + dronePower+ '\n';
+
+		App.pos = App.pos.nextPosition(d);
+		nrMoves++;
+  	
+  		return App.pos;
 	}
-	
+	/*
+	public static int closestPositiveStation(Position pos1) {
+		ArrayList<Double> eDistances = new ArrayList<>();
+		Map<Double, Integer> indexEdistances = new HashMap<>();
+		
+		for(int i =0;i<50;i++) {
+			if(App.coins[i] > 0) {                                              // eDistances will be empty when you go through all the stations
+				double dist = Math.pow((pos1.latitude - App.latitudes[i]),2) + Math.pow((pos1.longitude - App.longitudes[i]),2);
+				eDistances.add(dist);
+				indexEdistances.put(dist, i);
+			}
+		}	
+		if(eDistances.isEmpty()) return -1;
+		Collections.sort(eDistances);
+		return indexEdistances.get(eDistances.get(0));
+	}
+	*/
+	/*
 	 public static ArrayList<Direction> getNextDirections(ArrayList<Integer> res){
 		 ArrayList<Direction> nextDirections = new ArrayList<>();
 		 for(int i =0;i<res.size();i++) {
@@ -26,10 +46,10 @@ public class Stateful extends Drone{
 		 }
 		  return nextDirections;
 		
-	   }
+	   }*/
 	
-	public static int targetStation(Position pos) {
-		double min =Double.MAX_VALUE;
+	protected static int targetStation(Position pos) {                                   //this method returns the closest positive station given a position
+		double min =Double.MAX_VALUE;                                                    //I use this method to get the index of the "target" station 
 		int k = -1;
 		for(int i =0;i<50;i++) {
 			if(App.coins[i] > 0) {
@@ -42,40 +62,12 @@ public class Stateful extends Drone{
 		}
 		return k;
 	}
-	
-	 public static Direction getNextDirection(int closestStation) {
-		   ArrayList<Double> eDistances1 = new ArrayList<>();
-		   
-		   Map<Double, Direction> directionEdistances = new HashMap<>();
-		   for(Direction d : Position.allDirections) {
-			   Position pos1 = App.pos.nextPosition(d);
-			   if(pos1.inPlayArea()) {
-				   if(closestStation == -1 || App.coins[closestStation]>0) {
-					   double dist1 = Math.pow((pos1.latitude - App.latitudes[closestStation]),2) + Math.pow((pos1.longitude - App.longitudes[closestStation]),2);
-					   eDistances1.add(dist1);
-					   directionEdistances.put(dist1, d);
-				   }
-				   
-			   }
-		   }
-		   Collections.sort(eDistances1);
-		
-		   return directionEdistances.get(eDistances1.get(0));
-	   }
-	 
-	 public static boolean noNegatives(Position pos) {
-		 int closestStation = getClosestStation(pos);
-		 if(closestStation == -1 || App.coins[closestStation] > 0)
-			 return true;
-		 
-		 return false;
-	 }
-	 
-	 public static Direction getNextDirection2(int station) {
-		 
+
+
+	 protected static Direction getNextDirection(int station) {                       // this method returns the direction of the target station that is in play area 
+		                                                                              // the target needs to be in play are and it shouldn't go next to a negative station
 		 double min =Double.MAX_VALUE;
 		 Direction dir =null;
-		 //if(station == -1) return dir;
 		 for(Direction d : Position.allDirections) {
 			 Position pos = App.pos.nextPosition(d);
 			 if(pos.inPlayArea() && noNegatives(pos)) {
@@ -91,28 +83,7 @@ public class Stateful extends Drone{
 		 }
 		 return dir;
 	 }
-	 
-	 public static Direction getNextDirectionNegatives(int station) {
-		 
-		 double min =Double.MAX_VALUE;
-		 Direction dir =null;
-		 //if(station == -1) return dir;
-		 for(Direction d : Position.allDirections) {
-			 Position pos = App.pos.nextPosition(d);
-			 if(pos.inPlayArea()) {
-				
-					 double dist = Math.pow((pos.latitude - App.latitudes[station]),2) + Math.pow((pos.longitude - App.longitudes[station]),2);
-					 if(dist < min) {
-							min = dist;
-							dir = d;
-					}
-				 
-			 }
-			 
-		 }
-		 return dir;
-	 }
-	 
+/*
 	 public static boolean equalss(Position pos, Position pos1) {
 		 if(pos.latitude == pos1.latitude && pos.longitude == pos1.longitude)
 			 return true;
@@ -128,81 +99,37 @@ public class Stateful extends Drone{
 		 
 		 return false;
 	 }
- 
- 
-	//getclosestStation - ia cea mai apropiata statie din rangeul tau
-	//getNextDirection - ia directia celei mai apropiate statii
-	public static void startGameStateful() {
-		//HashMap<Position, Integer> help = new HashMap<>();
-		//ArrayList<Position> help2 = new ArrayList<>();
-		//int nr =0;
-		//App.path = App.initializeLineString2();
+ */
+	//fixat bug
+	//file txt pus la punct
+	//file geojson
+	//comentat cod
+	//raport
+	protected static void startGameStateful() {                                             //this method is responsible for how the stateful drone behaves
 		
 		Direction d = null;
-		//Position p = new Position(55.9447, -3.1887);
-		//int target = targetStation(App.pos);
-		int target = closestPositiveStation(App.pos);
+		int target = targetStation(App.pos);                                              //take the station that the drone wants to reach
 
-		//help2.add(App.pos);
-		//help.put(App.pos, 1);
-		while(dronePower >= 1.25 && nrMoves<250) {
-			if(target == -1) {
-				int randomInt = getRandomWithExclusion(App.random, 0, 15, takeNext(App.pos));
-				//int random16 = App.random.nextInt(16);
-			    d = getNextDirection2(randomInt);
-			    App.pos = moveStateful(d);
-			    
-			    addToLine(App.pos);
+		while(dronePower >= 1.25 && nrMoves<250) {                                        //loop until you run out of power or moves
+			if(target == -1) {                                                            //target will be -1 when there are no more positive stations to go
+				int randomInt = getRandomWithExclusion(App.random, 0, 15, badStations(App.pos));
+			    d = getNextDirection(randomInt);                                           //when the drone runs out of positive stations go to a random valid position
+			    App.pos = moveStateful(d);                                                 //move as required and add to the path
+			    App.path.add(Point.fromLngLat(App.pos.longitude, App.pos.latitude));
 			}
 			else {
-			d = getNextDirection2(target);    //daca viitoarea pozitie nu are nimic in range sau are ceva positiv
+			d = getNextDirection(target);                                                  //get the direction of the target
 			
-			App.pos = moveStateful(d);
-		
-			
-			addToLine(App.pos);
-			
-			///////////////////////
-		/*	
-			help2.add(App.pos);
+			App.pos = moveStateful(d);                                                      //move as required and add to the path
+			App.path.add(Point.fromLngLat(App.pos.longitude, App.pos.latitude));	
 
-            for(Position p : help2) {
-            	//System.out.println(p);
-              if(containsKeyy(p, help)) {
-            	 System.out.println(containsKeyy(p, help));
-        		help.put(p, help.get(p) + 1);
-              }
-              //else {
-            	//  help.put(p, 1); 
-            	 // System.out.println(help.get(p));
-             // }
-             }
-		
-			for(Position pos : help.keySet()) {
-			
-				if(help.get(pos) > 3) {
-					int random16 = App.random.nextInt(16);
-				    d = getNextDirection2(random16);
-				    App.pos = moveStateful(d);
-				    addToLine(App.pos);
-				    target = closestPositiveStation(App.pos);
-				}
-			}*/
-		/////////////////////////////////
-		
-			int closest = getClosestStation(App.pos);
+			int closest = getClosestStation(App.pos);                                      //take the closest station from the current position
 	
-			   if(target == closest) {
+			   if(target == closest) {                                                     //if the drone reached the target, connect to it
 				positiveCollect(target);
-				target = closestPositiveStation(App.pos);
-			}
-			}
-	       
+				target = targetStation(App.pos);                                           //calculate the new target and loop again
+			  }
+		   }   
 		}
 	}	
 }
-//fixat bug
-//file txt pus la punct
-//file geojson
-//comentat cod
-//raport
