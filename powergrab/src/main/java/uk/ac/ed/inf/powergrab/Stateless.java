@@ -56,21 +56,19 @@ public class Stateless extends Drone{
 			  	}
 			}	
 	}
-	 /* int closest2 = getClosestStation(App.pos); 	
-		if(closest2 == -1) return;                                                   //if there is no station in range, exit the function
-		else if(App.coins[closest2] < 0) negativeCollect(closest2);                  //if the closest station from the random position is negative then connect to it
-*/  
-	
-   protected static void startGameStateless() {                                
+
+    protected static void startGameStateless() {                                
 	  while(dronePower >= 1.25 && nrMoves<250) {                                                //loop until drone runs our of moves or power
 		  for (Direction d : Position.allDirections) {
 			  Position nextPos = App.pos.nextPosition(d);                                       //try for direction d
 			  if(nextPos.inPlayArea()) {
 				  goStatelessGo(nextPos,d);
-			      break;
+				  break;
 		      }
 		 }
 	  }
 	}
+   
+
 }
 	

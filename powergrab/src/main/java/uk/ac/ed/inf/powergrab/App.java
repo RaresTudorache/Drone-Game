@@ -91,8 +91,8 @@ public class App
 		Double Long = Double.parseDouble(args[4]);
 		int seed = Integer.parseInt(args[5]);                                                  
 		String droneMode = args[6];
-        
-		
+         
+		long Currtime = System.currentTimeMillis();
 		pos = new Position(lat,Long);                                                           //initial starting position
 		random = new Random(seed);
 		
@@ -108,9 +108,12 @@ public class App
              Stateful.startGameStateful();
        
     	System.out.println(Drone.droneCoins);
+    	//System.out.println(Drone.dronePower);
+    	System.out.println(Drone.nrMoves);
     	
     	
-       
+    	long tertime = System.currentTimeMillis();
+    /*   
     	PrintWriter writerTxt = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".txt", "UTF-8");
     	writerTxt.println(Drone.outputTXT);
     	writerTxt.close();
@@ -125,6 +128,7 @@ public class App
 		PrintWriter writerGeojson = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".geojson", "UTF-8");
     	writerGeojson.println(outputGeojson);
     	writerGeojson.close();
-		
+		*/
+    	System.out.println(tertime-Currtime);
     }
 }

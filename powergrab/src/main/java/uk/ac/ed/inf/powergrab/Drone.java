@@ -84,8 +84,7 @@ public class Drone {
 		 
 		 return false;
 	 }
-	 
-	
+
 	public static int getRandomWithExclusion(Random rnd, int start, int end, ArrayList<Integer> wrongStations) {         //method for taking a random number excluding the ones that are
 	    int random = start + rnd.nextInt(end - start + 1 - wrongStations.size());                                        //added to the list
 	   
@@ -99,10 +98,10 @@ public class Drone {
 	}
 
 	
-	public static ArrayList<Integer> badStations(Position simPos) {                                         //this method returns an ArrayList with all next positions that are not valid
+	public static ArrayList<Integer> badStations() {                                         //this method returns an ArrayList with all next positions that are not valid
 		ArrayList<Integer> wrongStations = new ArrayList<>();
 		for(Direction d : Position.allDirections) {                                               
-			simPos = App.pos.nextPosition(d);
+			Position simPos = App.pos.nextPosition(d);
 			if(!simPos.inPlayArea() || !noNegatives(simPos)) {                                             //a position is not valid if it is out of play area or 
 				int k = Arrays.asList(Direction.values()).indexOf(d);                                      // if it is in range of a negative station
 				wrongStations.add(k);
@@ -112,7 +111,7 @@ public class Drone {
 	}	
 	
 	public static void moveRandom(Position simPos) {                                                      //this method takes a random direction that is valid and 
-		int randomInt = getRandomWithExclusion(App.random, 0, 15, badStations(simPos));                   //it updates current position, dronePower and number of moves 
+		int randomInt = getRandomWithExclusion(App.random, 0, 15, badStations());                   //it updates current position, dronePower and number of moves 
 		                                                                                                  //same as in the previous move method, I chose to form the output String for the TXT file
 		simPos = App.pos.nextPosition(Direction.values()[randomInt]);
 		dronePower -= 1.25;
