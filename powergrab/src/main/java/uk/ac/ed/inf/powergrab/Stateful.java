@@ -114,7 +114,7 @@ public class Stateful extends Drone{
 			    }
 			
 			}
-			System.out.println(nr);
+			//System.out.println(nr);
 			
 			//////////////////////////////////////
 			App.pos = moveStateful(d);                                                      //move as required and add to the path

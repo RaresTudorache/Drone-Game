@@ -117,7 +117,7 @@ public class App
     	PrintWriter writerTxt = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".txt", "UTF-8");
     	writerTxt.println(Drone.outputTXT);
     	writerTxt.close();
-
+	
     	LineString lineS = LineString.fromLngLats(path);                   					//take the list of Points and create a LineString   
 		Feature feature = Feature.fromGeometry(lineS);  									//make the LineString a Feature 
 		FeatureCollection fc = FeatureCollection.fromJson(mapSource); 						//fc is a collection of Features
@@ -128,7 +128,7 @@ public class App
 		PrintWriter writerGeojson = new PrintWriter(droneMode + "-" + day + "-" +  month + "-" + year + ".geojson", "UTF-8");
     	writerGeojson.println(outputGeojson);
     	writerGeojson.close();
-		*/
+	*/
     	System.out.println(tertime-Currtime);
     }
 }
