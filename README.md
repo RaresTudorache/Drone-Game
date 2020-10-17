@@ -3,7 +3,8 @@
 An autonomous drone which is to play against a human component in a location-based strategy game. The drone competes against a human player who is acting as the pilot of a remote-controlled drone which moves only in response to directions from the pilot.
 
 # Content
-* __Strong__ (test)
+* __ilp-results:__ contains the .geojson files that shows the flight path of the stateless and stateful drone 
+* __ilp-report.pdf:__ contains the class documentation and the report of the strategy implementation
 
 
 # Maps
