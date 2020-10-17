@@ -5,7 +5,7 @@ An autonomous drone which is to play against a human component in a location-bas
 # Content
 * __ilp-results:__ contains the .geojson files that shows the flight path of the stateless and stateful drone 
 * __ilp-report.pdf:__ contains the class documentation and the report of the strategy implementation
-
+* __powergrab__: contains the relevant files for the movement of the drone
 
 # Maps
 
